@@ -1,0 +1,320 @@
+---
+title: "Data preperation pilot study: test framing and bioinspired items"
+author: "Julius Fenn, Stephanie Bugler"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    html-math-method: katex
+    number-sections: true
+---
+
+
+# Notes
+
+
+# global variables
+
+Define your global variables (can take some time to run):
+
+```{r}
+#| label: global variables
+
+
+```
+
+
+
+
+# create raw data files
+
+
+
+```{r}
+#| label: create raw files
+#| warning: false
+
+# sets the directory of location of this script as the current directory
+# setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+
+### load packages
+require(pacman)
+p_load('tidyverse', 'jsonlite',
+       'stargazer',  'DT', 'psych',
+       'writexl')
+
+
+### load socio-demographic data
+setwd("data demographic")
+prolific1 <- read.csv(file = "prolific_export_686b77f8cfbf5d7b389a8c7f.csv", header = TRUE)
+prolific2 <- read.csv(file = "prolific_export_686b78a1a5549b7b2f0d7f73.csv", header = TRUE)
+prolific3 <- read.csv(file = "prolific_export_686b7820bd1126b3579fbda5.csv", header = TRUE)
+
+prolific <- rbind(prolific1, prolific2, prolific3)
+rm(prolific1); rm(prolific2); rm(prolific3)
+
+### load JATOS data
+setwd("../data")
+suppressMessages(
+  read_file('jatos_results_data_20250721152532.txt') %>%
+    # ... split it into lines ...
+    str_split('\n') %>% first() %>%
+    # ... filter empty rows ...
+    discard(function(x)
+      x == '') %>%
+    discard(function(x)
+      x == '\r') %>%
+    # ... parse JSON into a data.frame
+    map_dfr(fromJSON, flatten = TRUE)
+) -> dat
+
+# Read and parse each JSON line into a list
+# json_data <- suppressMessages(
+#   read_file("jatos_results_data_20250405122610.txt") %>%
+#     str_split("\n") %>%
+#     first() %>%
+#     discard(~ .x == "" || .x == "\r") %>%
+#     map(~ fromJSON(.x, simplifyVector = FALSE)) # Keep full nested structure
+# )
+
+#> add ID counter
+dat$ID <- NA
+
+tmp_IDcounter <- 0
+for (i in 1:nrow(dat)) {
+  if (!is.na(dat$sender[i]) &&
+      dat$sender[i] == "Greetings") {
+    tmp_IDcounter = tmp_IDcounter + 1
+  }
+  dat$ID[i] <- tmp_IDcounter
+}
+rm(tmp_IDcounter)
+
+
+### load functions
+setwd("../../../functions")
+for(i in 1:length(dir())){
+  # print(dir()[i])
+  source(dir()[i], encoding = "utf-8")
+}
+
+rm(i)
+
+
+### summary function
+data_summary <- function(data, varname, groupnames){
+  require(plyr)
+  summary_func <- function(x, col){
+    c(mean = mean(x[[col]], na.rm=TRUE),
+      se = sd(x[[col]], na.rm=TRUE) / sqrt(length(x[[col]])))
+  }
+  data_sum<-ddply(data, groupnames, .fun=summary_func,
+                  varname)
+  data_sum <- plyr::rename(data_sum, c("mean" = varname))
+  return(data_sum)
+}
+```
+
+
+# set up questionnaires
+
+
+```{r}
+#| label: create questionnaires files
+#| warning: false
+
+### keep only complete data sets
+sort(table(dat$ID), decreasing = FALSE)[1:5]
+sum(table(dat$ID) != max(table(dat$ID)))
+sum(table(dat$ID) == max(table(dat$ID)))
+
+dat <-
+  dat[dat$ID %in% names(table(dat$ID))[table(dat$ID) == max(table(dat$ID))], ]
+
+
+
+### json (from JATOS) to 2D data.frame
+#> scales
+tmp_numeric <- str_subset(string = colnames(dat), pattern = "^EcologicalDimension|^Bioinspiration")
+tmp_numeric <- c(tmp_numeric, "dummy_informedconsent", "commCheck", "feedback_conscientiousCompletion", "sociodemo_age")
+
+# add paradata
+tmp_notNumeric <- str_subset(string = colnames(dat), pattern = "^meta")
+tmp_notNumeric <- str_subset(string = tmp_notNumeric,
+             pattern = "labjs|location",
+             negate = TRUE)
+tmp_notNumeric <- c(tmp_notNumeric, "PROLIFIC_PID", "framingCondition", "sociodemo_gender", "sociodemo_priorExperience", "sociodemo_residency", "feedback_critic")
+
+### get survey
+vec_ques <- c(tmp_notNumeric, tmp_numeric)
+
+questionnaire <- questionnairetype(
+  dataset = dat,
+  listvars = vec_ques,
+  notNumeric = tmp_notNumeric,
+  verbose = FALSE
+)
+
+rm(tmp_notNumeric); rm(tmp_numeric); rm(vec_ques)
+
+dim(questionnaire)
+```
+
+add ordering of scales shown (for neutral condition it is random):
+
+```{r}
+dat_order <- dat[dat$sender %in% c("Sequence Ecological Bioinspiration", "Sequence Bioinspiration Ecological"),]
+dat_order <- dat_order[dat_order$ended_on %in% "completion", ]
+
+dat_order$framingCondition <- questionnaire$framingCondition
+
+head(dat_order[, c("framingCondition", "sender")])
+tail(dat_order[, c("framingCondition", "sender")])
+
+
+questionnaire$whichItemsFirst <- ifelse(test = dat_order$sender == "Sequence Ecological Bioinspiration", yes = "sustainable", no = "bioinspired")
+
+
+table(questionnaire$framingCondition, questionnaire$whichItemsFirst)
+```
+
+## add prolific
+
+```{r}
+### add prolific data
+prolific <- prolific[prolific$Participant.id %in% questionnaire$PROLIFIC_PID,]
+prolific <- prolific %>%
+  arrange(sapply(Participant.id, function(y) which(y == questionnaire$PROLIFIC_PID)))
+
+
+# !!! few participants have participated in both framing conditions?
+sum(table(prolific$Participant.id) >= 2)
+prolific[prolific$Participant.id == "665d5a08c8e61c18498d08c9",]
+
+
+
+questionnaire$socio_age <- NA
+questionnaire$socio_sex <- NA
+questionnaire$socio_ethnicity <- NA
+questionnaire$socio_student <- NA
+questionnaire$socio_employment <- NA
+  
+  
+for(i in 1:nrow(questionnaire)){
+  tmp_prolific <- prolific[prolific$Participant.id == questionnaire$PROLIFIC_PID[i], ]
+  
+  if(nrow(tmp_prolific) == 1){
+    questionnaire$socio_age[i] <- tmp_prolific$Age
+    questionnaire$socio_sex[i] <- tmp_prolific$Sex
+    questionnaire$socio_ethnicity[i] <- tmp_prolific$Ethnicity.simplified
+    questionnaire$socio_student[i] <- tmp_prolific$Student.status
+    questionnaire$socio_employment[i] <- tmp_prolific$Employment.status
+    questionnaire$total_min_prolific[i] <- tmp_prolific$Time.taken / 60
+  } else{
+    print(unique(tmp_prolific$Participant.id))
+  }
+}
+
+
+questionnaire$total_min_prolific[questionnaire$total_min_prolific > 1000] <- NA
+questionnaire$socio_age <- as.numeric(questionnaire$socio_age)
+```
+
+```{r}
+table(questionnaire$socio_sex, questionnaire$sociodemo_gender)
+plot(questionnaire$socio_age, questionnaire$sociodemo_age)
+
+table(questionnaire$socio_employment)
+```
+
+
+
+## set type of variables
+
+```{r}
+questionnaire$ID <- factor(questionnaire$ID)
+
+
+questionnaire$sociodemo_gender <- factor(questionnaire$sociodemo_gender)
+questionnaire$sociodemo_priorExperience <- factor(questionnaire$sociodemo_priorExperience)
+questionnaire$sociodemo_residency <- factor(questionnaire$sociodemo_residency)
+
+
+questionnaire$framingCondition <- factor(questionnaire$framingCondition)
+questionnaire$whichItemsFirst <- factor(questionnaire$whichItemsFirst)
+```
+
+
+```{r}
+## non-informative - but Prolific works:
+table(questionnaire$sociodemo_residency)
+```
+
+
+
+## reverse code items
+
+within single scales:
+
+```{r}
+psych::cor.plot(r = cor(questionnaire[, str_subset(string = colnames(questionnaire), pattern = "^EcologicalDimension")], use =  "pairwise.complete.obs"))
+psych::cor.plot(r = cor(questionnaire[, str_subset(string = colnames(questionnaire), pattern = "^Bioinspiration")], use =  "pairwise.complete.obs"))
+```
+```{r}
+tmp_items <- str_subset(string = colnames(questionnaire), pattern = "^Bioinspiration.*r$")
+
+for(i in tmp_items){
+  questionnaire[[i]] <- 6 - questionnaire[[i]]
+}
+
+rm(tmp_items)
+
+psych::cor.plot(r = cor(questionnaire[, str_subset(string = colnames(questionnaire), pattern = "^Bioinspiration")], use =  "pairwise.complete.obs"))
+```
+
+
+```{r}
+# Visual Resemblance to Nature
+psych::cor.plot(r = cor(questionnaire[, str_subset(string = colnames(questionnaire), pattern = "^Bioinspiration-VRtN")], use =  "pairwise.complete.obs")) # Visual Resemblance to Nature 
+
+# Intentionality & Perceived Inspiration
+psych::cor.plot(r = cor(questionnaire[, str_subset(string = colnames(questionnaire), pattern = "^Bioinspiration-IPI")], use =  "pairwise.complete.obs"))
+
+# Perceived Naturalness
+psych::cor.plot(r = cor(questionnaire[, str_subset(string = colnames(questionnaire), pattern = "^Bioinspiration-PN")], use =  "pairwise.complete.obs"))
+```
+
+
+## show data
+
+```{r}
+DT::datatable(questionnaire, options = list(pageLength = 5))
+```
+
+
+## save data in different formats
+
+```{r}
+# Set output directory
+setwd("outputs")
+
+# Save as Excel (.xlsx)
+writexl::write_xlsx(
+  x = questionnaire,
+  path = "questionnaire.xlsx"   # Save Excel file
+)
+
+# Save as RDS (R internal format)
+write_rds(
+  x = questionnaire,
+  file = "questionnaire.rds"    # Save R object for later use
+)
+
+# Save as CSV
+write_csv(
+  questionnaire,
+  file = "questionnaire.csv"    # Save as CSV (comma-separated)
+)
+```
+
+

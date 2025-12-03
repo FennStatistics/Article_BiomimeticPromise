@@ -1,0 +1,308 @@
+---
+title: "Data preperation pilot study"
+author: "Julius Fenn, Stephanie Bugler"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    html-math-method: katex
+    number-sections: true
+---
+
+
+# Notes
+
+
+# global variables
+
+Define your global variables (can take some time to run):
+
+```{r}
+#| label: global variables
+
+
+```
+
+
+
+
+# create raw data files
+
+
+
+```{r}
+#| label: create raw files
+#| warning: false
+
+# sets the directory of location of this script as the current directory
+# setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+
+### load packages
+require(pacman)
+p_load('tidyverse', 'jsonlite',
+       'stargazer',  'DT', 'psych',
+       'writexl')
+
+
+### load socio-demographic data
+setwd("data demographic")
+prolific <- read.csv(file = "prolific_export_67f1084072684bd72497f0b0.csv", header = TRUE)
+
+### load JATOS data
+setwd("../data")
+suppressMessages(
+  read_file('jatos_results_data_20250405122610.txt') %>%
+    # ... split it into lines ...
+    str_split('\n') %>% first() %>%
+    # ... filter empty rows ...
+    discard(function(x)
+      x == '') %>%
+    discard(function(x)
+      x == '\r') %>%
+    # ... parse JSON into a data.frame
+    map_dfr(fromJSON, flatten = TRUE)
+) -> dat
+
+# Read and parse each JSON line into a list
+# json_data <- suppressMessages(
+#   read_file("jatos_results_data_20250405122610.txt") %>%
+#     str_split("\n") %>%
+#     first() %>%
+#     discard(~ .x == "" || .x == "\r") %>%
+#     map(~ fromJSON(.x, simplifyVector = FALSE)) # Keep full nested structure
+# )
+
+#> add ID counter
+dat$ID <- NA
+
+tmp_IDcounter <- 0
+for (i in 1:nrow(dat)) {
+  if (!is.na(dat$sender[i]) &&
+      dat$sender[i] == "Greetings") {
+    tmp_IDcounter = tmp_IDcounter + 1
+  }
+  dat$ID[i] <- tmp_IDcounter
+}
+rm(tmp_IDcounter)
+
+
+### load functions
+#getwd()
+setwd("../../../functions")
+for(i in 1:length(dir())){
+  # print(dir()[i])
+  source(dir()[i], encoding = "utf-8")
+}
+
+rm(i)
+
+
+### summary function
+data_summary <- function(data, varname, groupnames){
+  require(plyr)
+  summary_func <- function(x, col){
+    c(mean = mean(x[[col]], na.rm=TRUE),
+      se = sd(x[[col]], na.rm=TRUE) / sqrt(length(x[[col]])))
+  }
+  data_sum<-ddply(data, groupnames, .fun=summary_func,
+                  varname)
+  data_sum <- plyr::rename(data_sum, c("mean" = varname))
+  return(data_sum)
+}
+```
+
+
+# set up and save data in different formats
+
+
+```{r}
+#| label: create questionnaires files
+#| warning: false
+
+### keep only complete data sets
+sort(table(dat$ID))
+sum(table(dat$ID) != max(table(dat$ID)))
+sum(table(dat$ID) == max(table(dat$ID)))
+
+dat <-
+  dat[dat$ID %in% names(table(dat$ID))[table(dat$ID) == max(table(dat$ID))], ]
+
+
+
+### json (from JATOS) to 2D data.frame
+# > pre study
+# add paradata
+tmp_notNumeric <-
+  str_subset(string = colnames(dat), pattern = "^meta|^sustainable|^bioinspired|^rationalCon|^feedback")
+tmp_notNumeric <-
+  str_subset(string = tmp_notNumeric,
+             pattern = "labjs|location",
+             negate = TRUE)
+
+### get survey
+vec_ques <- c("PROLIFIC_PID",
+              "dummy_informedconsent",
+              tmp_notNumeric)
+
+vec_notNumeric = c("PROLIFIC_PID", tmp_notNumeric)
+
+questionnaire <- questionnairetype(
+  dataset = dat,
+  listvars = vec_ques,
+  notNumeric = vec_notNumeric,
+  verbose = FALSE
+)
+
+dim(questionnaire)
+
+
+
+### get word list of associations
+library(tidyverse)
+
+# First, select only relevant columns
+wordlistAssociations <- questionnaire %>%
+  select(PROLIFIC_PID, starts_with("bioinspired_R"), starts_with("sustainable_R")) %>%
+  pivot_longer(
+    cols = starts_with(c("bioinspired_R", "sustainable_R")),
+    names_to = c("typeWord", "orderAssociation"),
+    names_pattern = "(bioinspired|sustainable)_R(\\d)",
+    values_to = "association"
+  ) %>%
+  mutate(orderAssociation = as.integer(orderAssociation)) %>%
+  arrange(PROLIFIC_PID, typeWord, orderAssociation)
+
+
+
+### get edge list of seen connections
+edge_list <- list()
+
+for(i in unique(dat$ID)){
+  tmp_connections <- dat$drawnConnections[dat$ID == i]
+  tmp_connections <- tmp_connections[!sapply(tmp_connections, is.null)]
+  tmp_rational <- questionnaire[questionnaire$ID == i, str_subset(colnames(questionnaire), "rationalCon")]
+
+  # Only proceed if there is at least one set of connections
+  if (length(tmp_connections) > 0 && !is.null(unlist(tmp_connections))) {
+    # Assuming only one non-null element per ID (if not, loop or bind all)
+    con_df <- tmp_connections[[1]]
+    
+    # Flatten tmp_rational into a character vector
+    rat_vec <- as.character(tmp_rational[1, ])
+    
+    # Pad rational vector to match the number of rows in con_df
+    if (length(rat_vec) < nrow(con_df)) {
+      rat_vec <- c(rat_vec, rep(NA, nrow(con_df) - length(rat_vec)))
+    } else if (length(rat_vec) > nrow(con_df)) {
+      rat_vec <- rat_vec[1:nrow(con_df)]
+    }
+    
+    con_df$rational <- rat_vec
+    
+    # Add to result list
+    edge_list[[as.character(i)]] <- con_df
+  }
+}
+
+# Combine all into a single data frame
+edgelistAssociations <- bind_rows(edge_list, .id = "ID")
+```
+
+
+```{r}
+### save files
+setwd("outputs")
+#> questionnaire
+## save as .xlsx file
+writexl::write_xlsx(x = questionnaire, path = "questionnaire.xlsx")
+## save as R object
+saveRDS(questionnaire, file = "questionnaire.rds")
+
+#> wordlistAssociations
+## save as .xlsx file
+writexl::write_xlsx(x = wordlistAssociations, path = "wordlistAssociations.xlsx")
+## save as R object
+saveRDS(wordlistAssociations, file = "wordlistAssociations.rds")
+
+#> edgelistAssociations
+## save as .xlsx file
+writexl::write_xlsx(x = edgelistAssociations, path = "edgelistAssociations.xlsx")
+## save as R object
+saveRDS(edgelistAssociations, file = "edgelistAssociations.rds")
+```
+
+
+## for LLM analysis
+
+```{r}
+output_path <- "outputs/LLM/"
+
+extract_and_save_uniqueWords <- function(df, output_filename, output_path_file = output_path) {
+  # Select the relevant columns
+  df <- df[, c("typeWord", "association")]
+  
+  # Flatten the selected columns into a single vector
+  df$association <- tolower(df$association)
+  df$association <- str_trim(string = df$association, side = "both")
+  df <- df[nchar(df$association) >= 3, ]
+  df <- df %>%
+    arrange(association)
+
+  # Get the top 10 most frequent values
+  top_10_values <- sort(table(df$association), decreasing = TRUE)[1:10]
+  
+  # Get unique values with conditions
+  tmp_vector_unique <- unique(df$association)
+  tmp_vector_unique <- tmp_vector_unique[!is.na(tmp_vector_unique)]
+
+  # Compute lengths
+  total_length <- length(df$association)
+  unique_length <- length(tmp_vector_unique)
+  
+  # Prepare results as text
+  results_text <- paste(
+    "Top 10 Most Frequent Values:\n\n",
+    paste(names(top_10_values), top_10_values, sep = ": ", collapse = "\n"),
+    "\n\nTotal Length:", total_length,
+    "\nUnique Length:", unique_length
+  )
+  
+  cat(results_text)
+  
+  # Save to file
+  write_csv(x = df, file = paste0(output_path_file, output_filename, ".csv"))
+
+  
+  # Return a message confirming the save
+  cat("\n\nResults saved to:", paste0(output_path_file, output_filename, ".csv", "\n\n"))
+  
+  return(tmp_vector_unique)
+}
+
+tmp <- extract_and_save_uniqueWords(df = wordlistAssociations, output_filename = "uniqueWords_all", output_path_file = output_path)
+hist(nchar(tmp))
+barplot(table(str_count(tmp, "\\S+")))
+
+tmp <- extract_and_save_uniqueWords(df = wordlistAssociations[str_count(wordlistAssociations$association, "\\S+") <= 3,], output_filename = "uniqueWords_max3words", output_path_file = output_path)
+hist(nchar(tmp))
+barplot(table(str_count(tmp, "\\S+")))
+```
+
+
+
+
+# show data
+
+```{r}
+DT::datatable(questionnaire, options = list(pageLength = 5))
+
+
+summary(as.numeric(table(edgelistAssociations$ID)))
+table(edgelistAssociations$ID)
+DT::datatable(wordlistAssociations, options = list(pageLength = 5))
+
+
+
+DT::datatable(edgelistAssociations, options = list(pageLength = 5))
+```
+
