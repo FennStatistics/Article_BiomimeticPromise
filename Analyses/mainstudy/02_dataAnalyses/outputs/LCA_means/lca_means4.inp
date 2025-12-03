@@ -1,0 +1,30 @@
+TITLE:
+Latent Class Analysis Mean Scales c=4
+DATA:
+FILE = "lca_means2_90b0f4ae8908c999841cb59e472ff594.dat";
+ 
+VARIABLE:
+NAMES = Eco Bio_PN Bio_IPI Bio_VRtN; 
+ MISSING=.;
+ 
+  usevariables = Eco Bio_PN Bio_IPI Bio_VRtN;
+
+  classes      = c(4)
+ANALYSIS:
+
+    Type=mixture; ! LCA analysis
+    STARTS= 500 100;
+    !LRTstarts=0 0 300 20;
+  
+OUTPUT:
+tech11 tech14;
+SAVEDATA:
+file = lca_4.txt ;
+    save = cprob;
+    format = free;
+  
+PLOT:
+
+    type = plot3;
+    series is Eco(1) Bio_PN(2) Bio_IPI(3) Bio_VRtN(4);
+  

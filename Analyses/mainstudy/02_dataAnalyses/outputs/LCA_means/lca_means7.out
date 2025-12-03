@@ -1,0 +1,569 @@
+Mplus VERSION 8.6
+MUTHEN & MUTHEN
+12/03/2025   6:54 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE:
+  Latent Class Analysis Mean Scales c=7
+  DATA:
+  FILE = "lca_means2_90b0f4ae8908c999841cb59e472ff594.dat";
+
+  VARIABLE:
+  NAMES = Eco Bio_PN Bio_IPI Bio_VRtN;
+   MISSING=.;
+
+    usevariables = Eco Bio_PN Bio_IPI Bio_VRtN;
+
+    classes      = c(7)
+  ANALYSIS:
+
+      Type=mixture; ! LCA analysis
+      STARTS= 500 100;
+      !LRTstarts=0 0 300 20;
+
+  OUTPUT:
+  tech11 tech14;
+  SAVEDATA:
+  file = lca_7.txt ;
+      save = cprob;
+      format = free;
+
+  PLOT:
+
+      type = plot3;
+      series is Eco(1) Bio_PN(2) Bio_IPI(3) Bio_VRtN(4);
+
+
+
+
+*** WARNING in MODEL command
+  All variables are uncorrelated with all other variables within class.
+  Check that this is what is intended.
+   1 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+
+Latent Class Analysis Mean Scales c=7
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                         588
+
+Number of dependent variables                                    4
+Number of independent variables                                  0
+Number of continuous latent variables                            0
+Number of categorical latent variables                           1
+
+Observed dependent variables
+
+  Continuous
+   ECO         BIO_PN      BIO_IPI     BIO_VRTN
+
+Categorical latent variables
+   C
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Optimization Specifications for the Quasi-Newton Algorithm for
+Continuous Outcomes
+  Maximum number of iterations                                 100
+  Convergence criterion                                  0.100D-05
+Optimization Specifications for the EM Algorithm
+  Maximum number of iterations                                 500
+  Convergence criteria
+    Loglikelihood change                                 0.100D-06
+    Relative loglikelihood change                        0.100D-06
+    Derivative                                           0.100D-05
+Optimization Specifications for the M step of the EM Algorithm for
+Categorical Latent variables
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+Optimization Specifications for the M step of the EM Algorithm for
+Censored, Binary or Ordered Categorical (Ordinal), Unordered
+Categorical (Nominal) and Count Outcomes
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+  Maximum value for logit thresholds                            15
+  Minimum value for logit thresholds                           -15
+  Minimum expected cell size for chi-square              0.100D-01
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+Optimization algorithm                                         EMA
+Random Starts Specifications
+  Number of initial stage random starts                        500
+  Number of final stage optimizations                          100
+  Number of initial stage iterations                            10
+  Initial stage convergence criterion                    0.100D+01
+  Random starts scale                                    0.500D+01
+  Random seed for generating random starts                       0
+
+Input data file(s)
+  lca_means2_90b0f4ae8908c999841cb59e472ff594.dat
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns             1
+     Number of y missing data patterns           1
+     Number of u missing data patterns           0
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT FOR Y
+
+
+           Covariance Coverage
+              ECO           BIO_PN        BIO_IPI       BIO_VRTN
+              ________      ________      ________      ________
+ ECO            1.000
+ BIO_PN         1.000         1.000
+ BIO_IPI        1.000         1.000         1.000
+ BIO_VRTN       1.000         1.000         1.000         1.000
+
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     ECO                   5.395      -0.438       1.750    0.17%       4.500      5.250      5.500
+             588.000       1.092      -0.043       7.000   10.03%       5.750      6.250
+     BIO_PN                3.413      -0.386       1.000    0.34%       2.667      3.333      3.667
+             588.000       0.683      -0.297       5.000    3.57%       3.667      4.000
+     BIO_IPI               3.727      -0.605       1.250    0.51%       3.000      3.750      3.750
+             588.000       0.668       0.095       5.000    7.82%       4.000      4.500
+     BIO_VRTN              3.405      -0.516       1.000    0.85%       2.750      3.250      3.500
+             588.000       0.783      -0.267       5.000    3.23%       3.750      4.000
+
+RANDOM STARTS RESULTS RANKED FROM THE BEST TO THE WORST LOGLIKELIHOOD VALUES
+
+Final stage loglikelihood values at local maxima, seeds, and initial stage start numbers:
+
+           -2481.697  790059           469
+           -2481.697  691234           250
+           -2481.697  875667           367
+           -2481.697  629320           222
+           -2481.697  227563           63
+           -2481.697  1548             384
+           -2481.697  791396           243
+           -2481.697  436460           89
+           -2481.697  507154           387
+           -2481.697  654136           167
+           -2481.697  313407           132
+           -2481.697  118421           139
+           -2481.697  220454           288
+           -2481.697  694303           282
+           -2481.697  761633           50
+           -2481.697  216565           474
+           -2481.697  215353           164
+           -2481.697  797594           234
+           -2481.697  178475           231
+           -2481.697  173440           328
+           -2481.697  695155           150
+           -2481.697  535804           111
+           -2481.697  359578           458
+           -2481.697  915107           54
+           -2481.697  462953           7
+           -2481.697  188498           258
+           -2484.408  621542           375
+           -2484.408  441191           361
+           -2484.408  967237           48
+           -2484.408  76974            16
+           -2484.408  150531           154
+           -2484.408  579995           183
+           -2492.602  569131           26
+           -2492.602  27071            15
+           -2492.602  701525           239
+           -2492.602  484501           163
+           -2492.602  967902           52
+           -2492.602  769907           457
+           -2495.442  650371           14
+           -2495.442  722748           346
+           -2495.442  455617           242
+           -2495.442  496881           192
+           -2495.442  315029           471
+           -2495.442  443442           380
+           -2495.670  97158            205
+           -2495.670  152496           123
+           -2495.670  264081           186
+           -2495.670  93468            3
+           -2495.670  596257           405
+           -2495.670  329127           185
+           -2495.670  399848           220
+           -2495.670  471398           74
+           -2495.670  714455           476
+           -2501.644  132336           362
+           -2502.916  605161           409
+           -2502.916  61587            400
+           -2502.916  466971           109
+           -2502.916  376411           473
+           -2503.774  926797           406
+           -2504.155  561664           392
+           -2505.013  350608           334
+           -2505.610  175199           247
+
+38 perturbed starting value run(s) did not converge or were rejected in the third stage.
+
+
+
+THE BEST LOGLIKELIHOOD VALUE HAS BEEN REPLICATED.  RERUN WITH AT LEAST TWICE THE
+RANDOM STARTS TO CHECK THAT THE BEST LOGLIKELIHOOD IS STILL OBTAINED AND REPLICATED.
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       38
+
+Loglikelihood
+
+          H0 Value                       -2481.697
+          H0 Scaling Correction Factor      1.1682
+            for MLR
+
+Information Criteria
+
+          Akaike (AIC)                    5039.394
+          Bayesian (BIC)                  5205.710
+          Sample-Size Adjusted BIC        5085.073
+            (n* = (n + 2) / 24)
+
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON THE ESTIMATED MODEL
+
+    Latent
+   Classes
+
+       1         24.65176          0.04192
+       2         65.65519          0.11166
+       3         68.38696          0.11630
+       4         63.44303          0.10790
+       5         88.44390          0.15041
+       6        221.33236          0.37642
+       7         56.08680          0.09539
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON ESTIMATED POSTERIOR PROBABILITIES
+
+    Latent
+   Classes
+
+       1         24.65176          0.04192
+       2         65.65519          0.11166
+       3         68.38696          0.11630
+       4         63.44303          0.10790
+       5         88.44390          0.15041
+       6        221.33236          0.37642
+       7         56.08680          0.09539
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON THEIR MOST LIKELY LATENT CLASS MEMBERSHIP
+
+Class Counts and Proportions
+
+    Latent
+   Classes
+
+       1               25          0.04252
+       2               65          0.11054
+       3               70          0.11905
+       4               57          0.09694
+       5               88          0.14966
+       6              229          0.38946
+       7               54          0.09184
+
+
+CLASSIFICATION QUALITY
+
+     Entropy                         0.796
+
+
+Average Latent Class Probabilities for Most Likely Latent Class Membership (Row)
+by Latent Class (Column)
+
+           1        2        3        4        5        6        7
+
+    1   0.879    0.121    0.000    0.000    0.000    0.000    0.000
+    2   0.041    0.886    0.008    0.000    0.065    0.000    0.000
+    3   0.000    0.000    0.831    0.047    0.049    0.074    0.000
+    4   0.000    0.000    0.043    0.776    0.000    0.110    0.071
+    5   0.000    0.057    0.039    0.000    0.797    0.107    0.000
+    6   0.000    0.000    0.017    0.055    0.047    0.863    0.019
+    7   0.000    0.000    0.000    0.063    0.000    0.054    0.883
+
+
+Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+           1        2        3        4        5        6        7
+
+    1   0.891    0.109    0.000    0.000    0.000    0.000    0.000
+    2   0.046    0.877    0.000    0.000    0.077    0.000    0.000
+    3   0.000    0.008    0.850    0.036    0.050    0.056    0.000
+    4   0.000    0.000    0.052    0.697    0.000    0.197    0.054
+    5   0.000    0.048    0.038    0.000    0.793    0.121    0.000
+    6   0.000    0.000    0.023    0.028    0.043    0.893    0.013
+    7   0.000    0.000    0.000    0.072    0.000    0.078    0.850
+
+
+Logits for the Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+              1        2        3        4        5        6        7
+
+    1     13.701   11.595    0.000    0.000    1.643    0.000    0.000
+    2     10.738   13.684    4.775    0.000   11.248    2.602    0.000
+    3     -0.951    7.992   12.702    9.547    9.871    9.976    0.000
+    4    -10.891  -10.891   -0.039    2.564   -5.312    1.300    0.000
+    5      0.000   10.772   10.558    3.385   13.583   11.705    0.000
+    6     -9.486   -7.612    0.571    0.763    1.172    4.216    0.000
+    7    -13.653  -13.653  -11.909   -2.471  -13.653   -2.387    0.000
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Latent Class 1
+
+ Means
+    ECO                4.765      0.278     17.113      0.000
+    BIO_PN             1.671      0.105     15.985      0.000
+    BIO_IPI            1.862      0.118     15.820      0.000
+    BIO_VRTN           1.556      0.122     12.800      0.000
+
+ Variances
+    ECO                0.781      0.068     11.555      0.000
+    BIO_PN             0.178      0.027      6.547      0.000
+    BIO_IPI            0.142      0.017      8.344      0.000
+    BIO_VRTN           0.186      0.020      9.319      0.000
+
+Latent Class 2
+
+ Means
+    ECO                5.374      0.227     23.654      0.000
+    BIO_PN             2.471      0.129     19.078      0.000
+    BIO_IPI            2.539      0.097     26.206      0.000
+    BIO_VRTN           2.116      0.070     30.252      0.000
+
+ Variances
+    ECO                0.781      0.068     11.555      0.000
+    BIO_PN             0.178      0.027      6.547      0.000
+    BIO_IPI            0.142      0.017      8.344      0.000
+    BIO_VRTN           0.186      0.020      9.319      0.000
+
+Latent Class 3
+
+ Means
+    ECO                4.297      0.181     23.787      0.000
+    BIO_PN             2.637      0.097     27.208      0.000
+    BIO_IPI            4.152      0.088     47.032      0.000
+    BIO_VRTN           3.415      0.120     28.398      0.000
+
+ Variances
+    ECO                0.781      0.068     11.555      0.000
+    BIO_PN             0.178      0.027      6.547      0.000
+    BIO_IPI            0.142      0.017      8.344      0.000
+    BIO_VRTN           0.186      0.020      9.319      0.000
+
+Latent Class 4
+
+ Means
+    ECO                4.765      0.181     26.336      0.000
+    BIO_PN             3.692      0.142     26.090      0.000
+    BIO_IPI            4.617      0.062     74.914      0.000
+    BIO_VRTN           4.116      0.088     46.600      0.000
+
+ Variances
+    ECO                0.781      0.068     11.555      0.000
+    BIO_PN             0.178      0.027      6.547      0.000
+    BIO_IPI            0.142      0.017      8.344      0.000
+    BIO_VRTN           0.186      0.020      9.319      0.000
+
+Latent Class 5
+
+ Means
+    ECO                5.714      0.158     36.213      0.000
+    BIO_PN             3.203      0.110     29.027      0.000
+    BIO_IPI            3.294      0.095     34.708      0.000
+    BIO_VRTN           2.861      0.150     19.109      0.000
+
+ Variances
+    ECO                0.781      0.068     11.555      0.000
+    BIO_PN             0.178      0.027      6.547      0.000
+    BIO_IPI            0.142      0.017      8.344      0.000
+    BIO_VRTN           0.186      0.020      9.319      0.000
+
+Latent Class 6
+
+ Means
+    ECO                5.642      0.067     84.748      0.000
+    BIO_PN             3.839      0.050     77.409      0.000
+    BIO_IPI            3.834      0.047     81.304      0.000
+    BIO_VRTN           3.702      0.059     62.477      0.000
+
+ Variances
+    ECO                0.781      0.068     11.555      0.000
+    BIO_PN             0.178      0.027      6.547      0.000
+    BIO_IPI            0.142      0.017      8.344      0.000
+    BIO_VRTN           0.186      0.020      9.319      0.000
+
+Latent Class 7
+
+ Means
+    ECO                6.266      0.166     37.799      0.000
+    BIO_PN             4.560      0.077     59.044      0.000
+    BIO_IPI            4.668      0.083     56.562      0.000
+    BIO_VRTN           4.596      0.088     52.346      0.000
+
+ Variances
+    ECO                0.781      0.068     11.555      0.000
+    BIO_PN             0.178      0.027      6.547      0.000
+    BIO_IPI            0.142      0.017      8.344      0.000
+    BIO_VRTN           0.186      0.020      9.319      0.000
+
+Categorical Latent Variables
+
+ Means
+    C#1               -0.822      0.376     -2.185      0.029
+    C#2                0.158      0.258      0.609      0.542
+    C#3                0.198      0.295      0.673      0.501
+    C#4                0.123      0.292      0.422      0.673
+    C#5                0.455      0.287      1.589      0.112
+    C#6                1.373      0.208      6.593      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.428E-03
+       (ratio of smallest to largest eigenvalue)
+
+
+TECHNICAL 11 OUTPUT
+
+     Random Starts Specifications for the k-1 Class Analysis Model
+        Number of initial stage random starts                 500
+        Number of final stage optimizations                   100
+
+
+
+     VUONG-LO-MENDELL-RUBIN LIKELIHOOD RATIO TEST FOR 6 (H0) VERSUS 7 CLASSES
+
+          H0 Loglikelihood Value                        -2505.610
+          2 Times the Loglikelihood Difference             47.826
+          Difference in the Number of Parameters                5
+          Mean                                             -2.204
+          Standard Deviation                               39.489
+          P-Value                                          0.0532
+
+     LO-MENDELL-RUBIN ADJUSTED LRT TEST
+
+          Value                                            46.372
+          P-Value                                          0.0574
+
+
+TECHNICAL 14 OUTPUT
+
+     Random Starts Specifications for the k-1 Class Analysis Model
+        Number of initial stage random starts                 500
+        Number of final stage optimizations                   100
+
+     Random Starts Specification for the k-1 Class Model for Generated Data
+        Number of initial stage random starts                   0
+        Number of final stage optimizations for the
+           initial stage random starts                          0
+     Random Starts Specification for the k Class Model for Generated Data
+        Number of initial stage random starts                  40
+        Number of final stage optimizations                     8
+     Number of bootstrap draws requested                   Varies
+
+
+     PARAMETRIC BOOTSTRAPPED LIKELIHOOD RATIO TEST FOR 6 (H0) VERSUS 7 CLASSES
+
+          H0 Loglikelihood Value                        -2505.610
+          2 Times the Loglikelihood Difference             47.826
+          Difference in the Number of Parameters                5
+          Approximate P-Value                              0.0000
+          Successful Bootstrap Draws                           10
+
+
+PLOT INFORMATION
+
+The following plots are available:
+
+  Histograms (sample values)
+  Scatterplots (sample values)
+  Sample means
+  Estimated means, medians, modes, and percentiles
+  Sample and estimated means
+  Observed individual values
+  Estimated means and observed individual values
+  Estimated overall and class-specific distributions
+
+SAVEDATA INFORMATION
+
+
+  Save file
+    lca_7.txt
+
+  Order of variables
+
+    ECO
+    BIO_PN
+    BIO_IPI
+    BIO_VRTN
+    CPROB1
+    CPROB2
+    CPROB3
+    CPROB4
+    CPROB5
+    CPROB6
+    CPROB7
+    C
+
+  Save file format           Free
+
+  Save file record length    10000
+
+  Save missing symbol        *
+
+
+     Beginning Time:  18:54:48
+        Ending Time:  18:55:33
+       Elapsed Time:  00:00:45
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2021 Muthen & Muthen

@@ -1,0 +1,495 @@
+Mplus VERSION 8.6
+MUTHEN & MUTHEN
+12/03/2025   6:52 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE:
+  Latent Class Analysis Mean Scales c=2
+  DATA:
+  FILE = "lca_means2_90b0f4ae8908c999841cb59e472ff594.dat";
+
+  VARIABLE:
+  NAMES = Eco Bio_PN Bio_IPI Bio_VRtN;
+   MISSING=.;
+
+    usevariables = Eco Bio_PN Bio_IPI Bio_VRtN;
+
+    classes      = c(2)
+  ANALYSIS:
+
+      Type=mixture; ! LCA analysis
+      STARTS= 500 100;
+      !LRTstarts=0 0 300 20;
+
+  OUTPUT:
+  tech11 tech14;
+  SAVEDATA:
+  file = lca_2.txt ;
+      save = cprob;
+      format = free;
+
+  PLOT:
+
+      type = plot3;
+      series is Eco(1) Bio_PN(2) Bio_IPI(3) Bio_VRtN(4);
+
+
+
+
+*** WARNING in MODEL command
+  All variables are uncorrelated with all other variables within class.
+  Check that this is what is intended.
+   1 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+
+Latent Class Analysis Mean Scales c=2
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                         588
+
+Number of dependent variables                                    4
+Number of independent variables                                  0
+Number of continuous latent variables                            0
+Number of categorical latent variables                           1
+
+Observed dependent variables
+
+  Continuous
+   ECO         BIO_PN      BIO_IPI     BIO_VRTN
+
+Categorical latent variables
+   C
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Optimization Specifications for the Quasi-Newton Algorithm for
+Continuous Outcomes
+  Maximum number of iterations                                 100
+  Convergence criterion                                  0.100D-05
+Optimization Specifications for the EM Algorithm
+  Maximum number of iterations                                 500
+  Convergence criteria
+    Loglikelihood change                                 0.100D-06
+    Relative loglikelihood change                        0.100D-06
+    Derivative                                           0.100D-05
+Optimization Specifications for the M step of the EM Algorithm for
+Categorical Latent variables
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+Optimization Specifications for the M step of the EM Algorithm for
+Censored, Binary or Ordered Categorical (Ordinal), Unordered
+Categorical (Nominal) and Count Outcomes
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+  Maximum value for logit thresholds                            15
+  Minimum value for logit thresholds                           -15
+  Minimum expected cell size for chi-square              0.100D-01
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+Optimization algorithm                                         EMA
+Random Starts Specifications
+  Number of initial stage random starts                        500
+  Number of final stage optimizations                          100
+  Number of initial stage iterations                            10
+  Initial stage convergence criterion                    0.100D+01
+  Random starts scale                                    0.500D+01
+  Random seed for generating random starts                       0
+
+Input data file(s)
+  lca_means2_90b0f4ae8908c999841cb59e472ff594.dat
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns             1
+     Number of y missing data patterns           1
+     Number of u missing data patterns           0
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT FOR Y
+
+
+           Covariance Coverage
+              ECO           BIO_PN        BIO_IPI       BIO_VRTN
+              ________      ________      ________      ________
+ ECO            1.000
+ BIO_PN         1.000         1.000
+ BIO_IPI        1.000         1.000         1.000
+ BIO_VRTN       1.000         1.000         1.000         1.000
+
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     ECO                   5.395      -0.438       1.750    0.17%       4.500      5.250      5.500
+             588.000       1.092      -0.043       7.000   10.03%       5.750      6.250
+     BIO_PN                3.413      -0.386       1.000    0.34%       2.667      3.333      3.667
+             588.000       0.683      -0.297       5.000    3.57%       3.667      4.000
+     BIO_IPI               3.727      -0.605       1.250    0.51%       3.000      3.750      3.750
+             588.000       0.668       0.095       5.000    7.82%       4.000      4.500
+     BIO_VRTN              3.405      -0.516       1.000    0.85%       2.750      3.250      3.500
+             588.000       0.783      -0.267       5.000    3.23%       3.750      4.000
+
+RANDOM STARTS RESULTS RANKED FROM THE BEST TO THE WORST LOGLIKELIHOOD VALUES
+
+Final stage loglikelihood values at local maxima, seeds, and initial stage start numbers:
+
+           -2728.041  580405           286
+           -2728.041  783165           170
+           -2728.041  441191           361
+           -2728.041  605161           409
+           -2728.041  483369           270
+           -2728.041  345726           461
+           -2728.041  688839           273
+           -2728.041  640833           434
+           -2728.041  414284           158
+           -2728.041  701525           239
+           -2728.041  342019           301
+           -2728.041  751054           117
+           -2728.041  146900           391
+           -2728.041  726035           191
+           -2728.041  195353           225
+           -2728.041  335485           496
+           -2728.041  848890           95
+           -2728.041  502532           445
+           -2728.041  652266           490
+           -2728.041  679832           302
+           -2728.041  802779           122
+           -2728.041  298275           418
+           -2728.041  804561           59
+           -2728.041  736574           414
+           -2728.041  926797           406
+           -2728.041  34346            330
+           -2728.041  579995           183
+           -2728.041  347515           24
+           -2728.041  526324           178
+           -2728.041  915107           54
+           -2728.041  790059           469
+           -2728.041  456213           160
+           -2728.041  849670           347
+           -2728.041  903420           5
+           -2728.041  132336           362
+           -2728.041  246575           291
+           -2728.041  971693           470
+           -2728.041  81117            305
+           -2728.041  992389           77
+           -2728.041  297518           166
+           -2728.041  341041           34
+           -2728.041  988761           475
+           -2728.041  405079           68
+           -2728.041  587946           120
+           -2728.041  124999           96
+           -2728.041  284109           82
+           -2728.041  521575           313
+           -2728.041  383986           159
+           -2728.041  860102           495
+           -2728.041  458181           189
+           -2728.041  301180           236
+           -2728.041  567165           319
+           -2728.041  22362            365
+           -2728.041  637095           207
+           -2728.041  616917           261
+           -2728.041  609185           181
+           -2728.041  913639           162
+           -2728.041  723775           97
+           -2728.041  437181           135
+           -2728.041  732596           320
+           -2728.041  965639           463
+           -2728.041  821011           161
+           -2728.041  168762           200
+           -2728.041  68985            17
+           -2728.041  374219           353
+           -2728.041  216565           474
+           -2728.041  481835           57
+           -2728.041  840031           276
+           -2728.041  507154           387
+           -2728.041  202790           198
+           -2728.041  375590           438
+           -2728.041  215353           164
+           -2728.041  787985           482
+           -2728.041  206099           363
+           -2728.041  570782           193
+           -2728.041  534483           290
+           -2728.041  898745           466
+           -2728.041  717754           180
+           -2728.041  829540           324
+           -2728.041  471040           403
+           -2728.041  576220           115
+           -2728.041  416463           467
+           -2728.041  314757           345
+           -2728.041  937225           394
+           -2728.041  396795           323
+           -2728.041  568405           233
+           -2728.041  918558           412
+           -2728.041  830570           369
+           -2728.041  692169           308
+           -2728.041  314084           81
+           -2728.041  478421           311
+           -2728.041  303634           169
+           -2728.041  278692           342
+           -2728.041  930323           267
+           -2728.041  790452           303
+           -2728.041  207896           25
+           -2728.041  791396           243
+           -2728.041  247224           94
+           -2728.041  55115            408
+           -2728.041  17359            227
+
+
+
+THE BEST LOGLIKELIHOOD VALUE HAS BEEN REPLICATED.  RERUN WITH AT LEAST TWICE THE
+RANDOM STARTS TO CHECK THAT THE BEST LOGLIKELIHOOD IS STILL OBTAINED AND REPLICATED.
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       13
+
+Loglikelihood
+
+          H0 Value                       -2728.041
+          H0 Scaling Correction Factor      1.1030
+            for MLR
+
+Information Criteria
+
+          Akaike (AIC)                    5482.082
+          Bayesian (BIC)                  5538.980
+          Sample-Size Adjusted BIC        5497.709
+            (n* = (n + 2) / 24)
+
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON THE ESTIMATED MODEL
+
+    Latent
+   Classes
+
+       1        125.32048          0.21313
+       2        462.67952          0.78687
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON ESTIMATED POSTERIOR PROBABILITIES
+
+    Latent
+   Classes
+
+       1        125.32048          0.21313
+       2        462.67952          0.78687
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON THEIR MOST LIKELY LATENT CLASS MEMBERSHIP
+
+Class Counts and Proportions
+
+    Latent
+   Classes
+
+       1              119          0.20238
+       2              469          0.79762
+
+
+CLASSIFICATION QUALITY
+
+     Entropy                         0.896
+
+
+Average Latent Class Probabilities for Most Likely Latent Class Membership (Row)
+by Latent Class (Column)
+
+           1        2
+
+    1   0.951    0.049
+    2   0.026    0.974
+
+
+Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+           1        2
+
+    1   0.903    0.097
+    2   0.013    0.987
+
+
+Logits for the Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+              1        2
+
+    1      2.231    0.000
+    2     -4.360    0.000
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Latent Class 1
+
+ Means
+    ECO                5.315      0.107     49.711      0.000
+    BIO_PN             2.436      0.081     30.038      0.000
+    BIO_IPI            2.604      0.109     23.947      0.000
+    BIO_VRTN           2.127      0.082     25.945      0.000
+
+ Variances
+    ECO                1.090      0.062     17.442      0.000
+    BIO_PN             0.425      0.029     14.749      0.000
+    BIO_IPI            0.327      0.021     15.829      0.000
+    BIO_VRTN           0.340      0.022     15.314      0.000
+
+Latent Class 2
+
+ Means
+    ECO                5.416      0.049    110.886      0.000
+    BIO_PN             3.677      0.039     95.166      0.000
+    BIO_IPI            4.031      0.031    131.423      0.000
+    BIO_VRTN           3.751      0.039     96.279      0.000
+
+ Variances
+    ECO                1.090      0.062     17.442      0.000
+    BIO_PN             0.425      0.029     14.749      0.000
+    BIO_IPI            0.327      0.021     15.829      0.000
+    BIO_VRTN           0.340      0.022     15.314      0.000
+
+Categorical Latent Variables
+
+ Means
+    C#1               -1.306      0.148     -8.847      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.973E-02
+       (ratio of smallest to largest eigenvalue)
+
+
+TECHNICAL 11 OUTPUT
+
+     Random Starts Specifications for the k-1 Class Analysis Model
+        Number of initial stage random starts                 500
+        Number of final stage optimizations                   100
+
+
+
+     VUONG-LO-MENDELL-RUBIN LIKELIHOOD RATIO TEST FOR 1 (H0) VERSUS 2 CLASSES
+
+          H0 Loglikelihood Value                        -3060.646
+          2 Times the Loglikelihood Difference            665.210
+          Difference in the Number of Parameters                5
+          Mean                                             10.351
+          Standard Deviation                               20.462
+          P-Value                                          0.0000
+
+     LO-MENDELL-RUBIN ADJUSTED LRT TEST
+
+          Value                                           644.981
+          P-Value                                          0.0000
+
+
+TECHNICAL 14 OUTPUT
+
+     Random Starts Specifications for the k-1 Class Analysis Model
+        Number of initial stage random starts                 500
+        Number of final stage optimizations                   100
+
+     Random Starts Specification for the k-1 Class Model for Generated Data
+        Number of initial stage random starts                   0
+        Number of final stage optimizations for the
+           initial stage random starts                          0
+     Random Starts Specification for the k Class Model for Generated Data
+        Number of initial stage random starts                  40
+        Number of final stage optimizations                     8
+     Number of bootstrap draws requested                   Varies
+
+
+     PARAMETRIC BOOTSTRAPPED LIKELIHOOD RATIO TEST FOR 1 (H0) VERSUS 2 CLASSES
+
+          H0 Loglikelihood Value                        -3060.646
+          2 Times the Loglikelihood Difference            665.210
+          Difference in the Number of Parameters                5
+          Approximate P-Value                              0.0000
+          Successful Bootstrap Draws                            5
+
+
+PLOT INFORMATION
+
+The following plots are available:
+
+  Histograms (sample values)
+  Scatterplots (sample values)
+  Sample means
+  Estimated means, medians, modes, and percentiles
+  Sample and estimated means
+  Observed individual values
+  Estimated means and observed individual values
+  Estimated overall and class-specific distributions
+
+SAVEDATA INFORMATION
+
+
+  Save file
+    lca_2.txt
+
+  Order of variables
+
+    ECO
+    BIO_PN
+    BIO_IPI
+    BIO_VRTN
+    CPROB1
+    CPROB2
+    C
+
+  Save file format           Free
+
+  Save file record length    10000
+
+  Save missing symbol        *
+
+
+     Beginning Time:  18:52:22
+        Ending Time:  18:52:26
+       Elapsed Time:  00:00:04
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2021 Muthen & Muthen
