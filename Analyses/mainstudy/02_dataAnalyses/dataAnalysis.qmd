@@ -921,7 +921,32 @@ levels(dat_long_scaled$ratingType)
 # Run interaction model
 model_scaled <- lm(ratingScore ~ framingCondition * ratingType, data = dat_long_scaled)
 summary(model_scaled)
+
+
+stargazer(model_scaled)
 ```
+no differences in mean scores between groups, only changes in variance:
+
+```{r}
+library(lme4)
+library(lmerTest)
+library(performance)
+
+
+model_mixed <- lmer(
+  ratingScore ~ framingCondition * ratingType +
+    (1 | PROLIFIC_PID),
+  data = dat_long_scaled
+)
+
+icc(model_mixed)
+
+summary(model_mixed)
+```
+
+
+
+
 
 ```{r}
 dat_long_scaled %>%
