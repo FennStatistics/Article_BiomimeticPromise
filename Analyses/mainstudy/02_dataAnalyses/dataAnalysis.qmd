@@ -346,7 +346,7 @@ tmp_parallelAnalysis <- dimensionalityTest(label = "Overall",
                              regEx = regExOverall, dataset = dat)
 
 
-#> EFA (# of factors=5)
+#> EFA (# of factors=2)
 tmp_EFA <- explorativeFactorAnalysis(label = "Overall",
                                  regEx = regExOverall,
                                  dataset = dat, nfac = 2)
@@ -356,7 +356,7 @@ tmp_EFA[[1]]
 > two factor structure, within bioinspiried dimensions no strong differences in overall answering patterns; 1 items is dysfunctional (negative correlated)
 
 
-### for "Bioinspiration Items"
+### EFA for "Bioinspiration Items"
 
 
 ```{r}
@@ -618,6 +618,29 @@ omega_results$omega.g      # Group Omega (if multiple factors)
 ```
 
 
+### run again: EFA for “Bioinspiration Items”
+
+```{r}
+#### Overall EFA
+regExOverall <- "^Bioinspiration"
+
+
+psych::cor.plot(r = cor(dat[, str_detect(string = colnames(dat),
+                                                   pattern = regExOverall)]
+                        , use = "pairwise.complete.obs"),
+                upper = FALSE, xlas = 2, main = "Overall")
+
+#> parallel analysis
+tmp_parallelAnalysis <- dimensionalityTest(label = "Overall",
+                             regEx = regExOverall, dataset = dat)
+
+
+#> EFA (# of factors=5)
+tmp_EFA <- explorativeFactorAnalysis(label = "Overall",
+                                 regEx = regExOverall,
+                                 dataset = dat, nfac = 2)
+tmp_EFA[[1]]
+```
 
 ## Item Response Theory (polytomous) for "Bioinspiration Items"
 
@@ -730,11 +753,23 @@ psych::cor.plot(r = cor(dat[dat$framingCondition == "sustainable", str_detect(st
 ```{r}
 dat %>% 
   group_by(framingCondition) %>%
-  summarise(N = n(), mean_Ecological=mean(mean_Ecological), 
-            mean_Bioinspiration=mean(mean_Bioinspiration), 
-            mean_Bioinspiration_PN=mean(mean_Bioinspiration_PN), 
-            mean_Bioinspiration_IPI=mean(mean_Bioinspiration_IPI), 
-            mean_Bioinspiration_VRtN=mean(mean_Bioinspiration_VRtN))
+  dplyr::summarise(
+    N = n(),
+    mean_Eco = mean(mean_Ecological, na.rm = TRUE),
+    sd_Eco   = sd(mean_Ecological, na.rm = TRUE),
+    
+    mean_BioOverall = mean(mean_Bioinspiration, na.rm = TRUE),
+    sd_BioOverall   = sd(mean_Bioinspiration, na.rm = TRUE),
+    
+    mean_Bio_PN = mean(mean_Bioinspiration_PN, na.rm = TRUE),
+    sd_Bio_PN   = sd(mean_Bioinspiration_PN, na.rm = TRUE),
+    
+    mean_Bio_IPI = mean(mean_Bioinspiration_IPI, na.rm = TRUE),
+    sd_Bio_IPI   = sd(mean_Bioinspiration_IPI, na.rm = TRUE),
+    
+    mean_Bio_VRtN = mean(mean_Bioinspiration_VRtN, na.rm = TRUE),
+    sd_Bio_VRtN   = sd(mean_Bioinspiration_VRtN, na.rm = TRUE)
+  )
 ```
 
 
